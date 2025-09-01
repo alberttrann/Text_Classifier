@@ -56,6 +56,12 @@ There is much that we do not yet know concerning how electroreception functions.
 
 </details>
 
+The paper for the Extractive Arabic Text Summarization based on Graph-Based Approach can be found in the repo
+
+My teammate's initial simulation of the proposed solution in the paper, can be found [here](https://github.com/acscoder-digitalonda/text-extractive)
+
+You can try out his first solution [here](https://paper-text-summarization.streamlit.app/) to understand my baseline for this repo's experiment 
+
 ### **1. Initial Plan & Priorities (Based Solely on the Research Paper)**
 
 This is the plan we could have formulated *before* seeing the code or test results, based only on a critical academic reading of the paper.
@@ -82,6 +88,8 @@ The paper proposes a multi-stage, extractive summarization model for Arabic text
 ### **2. Concerns from Implementation & Testing, and Refined Directions**
 
 This is what we learned *after* analyzing the excellent implementation and its output on real-world paragraphs. These empirical results validate some of our initial concerns and reveal new, more urgent problems.
+
+Here is the result from testing with real-word passages at [here](https://paper-text-summarization.streamlit.app/)
 
 <details>
 <summary>Result(compression ratio: 0.3; similarity threshold: 0.3)</summary>

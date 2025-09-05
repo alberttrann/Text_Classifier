@@ -14,6 +14,52 @@ This document chronicles the iterative development of our text summarization sys
     *   **Brittle Heuristics:** The model was highly dependent on a literal title and a rigid graph structure, and it lacked robustness.
     *   **No Redundancy Control:** The model could easily select multiple sentences that conveyed the same information.
 
+
+## **Methodology: Benchmarking and Evaluation Framework**
+
+To rigorously assess the performance of the summarization models developed in this project, we designed a multi-faceted evaluation framework. This framework is built upon industry-standard quantitative metrics, advanced qualitative analysis, and a commitment to fair, controlled comparisons.
+
+### **1. Evaluation Overview**
+
+Our primary goal is to measure each model's effectiveness across three crucial dimensions of summary quality:
+
+*   **Lexical Fidelity:** How well does the generated summary overlap with the words and phrases used in a human-written reference?
+*   **Semantic Fidelity:** How well does the generated summary capture the *meaning* and *semantic content* of the reference, even if the exact wording is different?
+*   **Factual Consistency & Quality:** Is the summary factually accurate according to the original source article, and how does its overall quality (relevance, coherence, conciseness) compare in a reference-free setting?
+
+To measure these dimensions, we employ a suite of four distinct evaluation metrics: **ROUGE**, **BERTScore**, **Natural Language Inference (NLI)**, and a qualitative assessment using a Large Language Model as an unbiased judge (**LLM-as-a-Judge**).
+
+### **2. Evaluation Metrics: Reference vs. Reference-Free**
+
+We utilize both reference-based and reference-free metrics to provide a complete and unbiased picture of model performance.
+
+*   **Reference-Based Metrics (Comparing to a Human Summary):**
+    *   **ROUGE (Recall-Oriented Understudy for Gisting Evaluation):** This is the industry standard for measuring lexical overlap. We report **ROUGE-1** (unigram overlap, for keyword relevance), **ROUGE-2** (bigram overlap, for phrase fluency), and **ROUGE-L** (longest common subsequence, for sentence structure). A high ROUGE score indicates that the model is good at selecting the same verbatim sentences as a human.
+    *   **BERTScore:** This metric moves beyond lexical overlap to measure semantic similarity. It uses contextual embeddings from BERT to compare the meaning of the generated summary to the reference. A high BERTScore F1 indicates that the model has successfully captured the core meaning of the human-written summary, even if it uses different words (e.g., synonyms or paraphrasing).
+
+*   **Reference-Free Metrics (Comparing to the Source Article):**
+    *   **NLI (Natural Language Inference):** This metric acts as an objective "fact-checker." For each sentence in a generated summary, an NLI model determines if it is logically supported by ("entailed by") the source article. A high **Entailment** score and a low **Contradiction** score are definitive indicators of a model's factual consistency and its resistance to "hallucinating" information.
+    *   **LLM-as-a-Judge:** For a final, holistic assessment, we use a powerful, unbiased Large Language Model as a qualitative evaluator. The LLM scores each summary from 1 to 5 on four key criteria—**Relevance, Faithfulness, Coherence, and Conciseness**—based solely on the original article. This provides a human-like assessment of the summary's overall quality and readability.
+
+### **3. Fair Length Control for Unbiased Comparison**
+
+A critical aspect of a fair quantitative benchmark is ensuring that all models are compared on an equal footing. Since ROUGE and BERTScore are sensitive to summary length, it would be unfair to compare a 3-sentence summary to a 5-sentence one.
+
+Therefore, for all quantitative benchmarks (ROUGE and BERTScore), we enforce a **dynamic length control** policy. For each article in the test set, we first determine the number of sentences in its human-written reference summary. All models being evaluated on that article are then tasked with generating a summary of that **exact same length**. This ensures that we are purely measuring the quality of each model's content selection, not its ability to adhere to an arbitrary compression ratio.
+
+### **4. Baselines and Reference Methods**
+
+Our project builds upon and compares against established methods in the field.
+*   **Dataset:** We use the widely-cited **BBC News Summary Dataset**, which contains over 2,225 articles and their corresponding professionally-written summaries across five categories.
+*   **Baseline Model (TextRank):** We implement and evaluate the classic TextRank algorithm, a graph-based extractive model that serves as a powerful and standard baseline. Our implementation and evaluation strategy are informed by established practices, such as those demonstrated in the Kaggle notebook, ["Text Summarization Text Rank" by Misterfour](https://www.kaggle.com/code/misterfour/text-summarization-text-rank#Evaluate-the-model-on-ROUGE-and-BLEU-score).
+
+#### **5. Supervised Learning for State-of-the-Art Performance**
+
+While initial models rely on unsupervised heuristics, the state-of-the-art in extractive summarization is achieved through supervised learning. To this end, we have trained our own fine-tuned model based on the principles of the **BERTSum** architecture, a leading method in the field.
+
+*   **Rationale:** A supervised approach allows the model to learn the complex, nuanced patterns that determine a sentence's importance directly from data, rather than relying on hand-crafted rules. By creating "oracle" labels based on which sentences from the source article best reconstruct the human-written summary, we can fine-tune a powerful pre-trained model like BERT to act as a highly accurate sentence classifier.
+*   **Reference:** Our implementation is conceptually based on the methods pioneered by the BERTSum model, as detailed in the official repository: [nlpyang/BertSum](https://github.com/nlpyang/BertSum). This approach is chosen for its proven ability to achieve state-of-the-art results on both lexical (ROUGE) and semantic evaluation metrics.
+
 ## Phase 1: The Semantic Leap (`semantic_extractive1.py`)
 
 This version represented the first major architectural shift, moving from a purely lexical model to a semantic one to address the critical coverage failures.
@@ -2514,6 +2560,7 @@ Below are results of benchmarking all modes of our previously implemented models
 ```
 ================================================================================
                  QUALITATIVE DEEP-DIVE REPORT (Cloud LLM as Judge)
+                 50 samples
 ================================================================================
 
 --- Average Scores Across All Samples (1=Poor, 5=Excellent) ---
@@ -2530,6 +2577,7 @@ LLM_Only_Balanced                        3.86                3.66             4.
 
 ===============================================================================================
                          GRAND UNIFIED QUANTITATIVE BENCHMARK REPORT
+                         445 samples
 ===============================================================================================
                       ROUGE-1 ROUGE-2 ROUGE-L BERTScore-F1 NLI-Entailment NLI-Contradiction
 TextRank_Baseline      0.4191  0.3878  0.3429       0.9019         0.9845            0.0053
@@ -2552,7 +2600,7 @@ This is result of finetuned BERT model
 ```
 ================================================================================
                     HOLISTIC EVALUATION REPORT: Fine-tuned BERTSum
-50 samples
+                    50 samples
 ================================================================================
 
 --- Quantitative Metrics (Average Scores) ---
@@ -2576,7 +2624,7 @@ Avg Conciseness Score:   4.24 / 5.0
 
 ================================================================================
          FINAL QUANTITATIVE EVALUATION REPORT: Fine-tuned BERTSum
-445 samples
+        445 samples
 ================================================================================
 
 --- Lexical Overlap Metrics (Reference-Based) ---
@@ -2595,6 +2643,76 @@ Avg NLI Contradiction: 0.0095 (Lower is better)
 ```
 
 </details>
+
+Based on our experiments, there's an inherent trade-off that can be seen. **Purely extractive models hit a "coherence wall," and purely abstractive models hit a "factual wall."** Our hybrid model is a brilliant compromise, but as we saw, the LLM polishing stage *naturally* lowers the ROUGE score.
+
+So, **Is it possible to achieve SOTA performance in *both* ROUGE and BERTScore simultaneously?**
+
+The answer is **yes, it is possible**, but not with the unsupervised, heuristic-based models we have built so far. To break this trade-off, we need to move to the next paradigm: **Supervised, Extractive Fine-tuning.**
+
+### **The Root of the Trade-Off: Lack of "Oracle" Knowledge**
+
+Our current models (both the original and our advanced one) are **unsupervised**. They have no "teacher" to guide them. They use a set of clever rules (heuristics) to *guess* which sentences are important.
+*   **The Problem:** Our heuristics (PageRank, centrality, position, etc.) are proxies for importance. They are good, but they are not perfect. Sometimes, the sentence with the highest PageRank score isn't the one a human would have chosen.
+
+An abstractive model (like a generic LLM) is also unsupervised in the context of your specific article. It hasn't been specifically trained to summarize *that document* according to a human's preference. It uses its general world knowledge to make an educated guess.
+
+To get a model that is good at both metrics, it needs to learn **exactly what kind of sentences a human prefers for a summary.** This requires supervised learning.
+
+---
+
+### **The Solution: Supervised Extractive Summarization**
+
+This is the state-of-the-art for high-ROUGE, high-BERTScore systems. The most famous and effective model in this category is **BERTSum**.
+
+**How it Works (The Big Picture):**
+Instead of using heuristics to score sentences, you **train a machine learning model** to do it. The task is reframed as a **binary classification problem** for each sentence in the document: "Should this sentence be included in the summary? (Yes/No)"
+
+**The Step-by-Step Process:**
+
+1.  **The "Oracle" Labels**
+    *   We need a dataset of articles and their human-written reference summaries (like the BBC dataset we have).
+    *   For each article in your training set, you automatically create "oracle" labels. We go through every sentence in the original article and check: "Which sentences, if extracted, would give the highest possible ROUGE score against the reference summary?"
+    *   We greedily select sentences from the article until adding more doesn't improve the ROUGE score. The sentences you selected are now labeled **`1`** (include in summary), and all other sentences are labeled **`0`** (do not include).
+    *   We now have a training dataset where the input is a sentence and the output is a `1` or `0`.
+
+2.  **The Model (BERTSum):**
+    *   The model is based on BERT. We feed the entire article into a special version of BERT.
+    *   At the beginning of each sentence, we add a special `[CLS]` (classification) token.
+    *   After processing the entire document, the model outputs a final, context-aware embedding for each `[CLS]` token. This vector represents the meaning and importance of that sentence *in the context of the entire article*.
+
+3.  **The "Head" Classifier:**
+    *   We add a simple classifier (like a Logistic Regression or a small neural network) on top of these `[CLS]` embeddings.
+    *   We **fine-tune** this entire model (the BERT part and the classifier head) on our dataset with the "oracle" labels. The model's job is to learn to predict the `1` or `0` label for each sentence. It learns, through thousands of examples, what a "summary-worthy" sentence looks like.
+
+4.  **Inference (Making a Summary):**
+    *   To summarize a new article, we run it through your fine-tuned BERTSum model.
+    *   The model outputs a probability score (from 0.0 to 1.0) for each sentence.
+    *   We simply select the top 3-4 sentences with the highest probability scores, sort them in their original order, and we have our summary.
+
+---
+
+### **Why This Method Wins at Both ROUGE and BERTScore**
+
+This supervised approach solves the trade-off:
+
+1.  **It Wins at ROUGE:** The model was **explicitly trained to maximize ROUGE scores**. The "oracle" labels it learned from were created by finding the sentences that give the best possible ROUGE score. Therefore, its predictions are heavily biased towards making ROUGE happy. It learns to pick the exact sentences that a human would have picked, leading to massive lexical overlap.
+
+2.  **It Wins at BERTScore:** Because the model is based on BERT, its understanding of sentence importance is deeply **semantic and contextual**. It doesn't rely on simple keyword matching. It learns the deeper, contextual reasons why a sentence is important. Since the sentences it selects are the same ones a human found meaningful, their semantic content will also be highly aligned with the reference summary, leading to a very high BERTScore.
+
+### **The High-Level Plan**
+
+1.  **Environment Setup:** We will need powerful libraries, including `transformers` from Hugging Face and a deep learning framework like `PyTorch`.
+2.  **Data Preparation - The "Oracle" Labels:** This is the most critical and novel step. We will write a function that takes an article and its reference summary and automatically generates the `0` or `1` labels for each sentence in the article, based on which sentences maximize the ROUGE score against the reference.
+3.  **Model Definition (Simplified BERTSum):** We will define a model using a pre-trained `bert-base-uncased` model. We will add a simple classification layer (a "head") on top of it to predict the summary label for each sentence.
+4.  **Creating a PyTorch Dataset:** We will structure our labeled data into a custom `Dataset` class, which is the standard way to feed data into a PyTorch training loop.
+5.  **The Training Loop:** We will write a standard PyTorch training loop. This loop will:
+    *   Feed batches of articles into our model.
+    *   Compare the model's predictions to the "oracle" labels.
+    *   Calculate the loss (how wrong the model was).
+    *   Use backpropagation and an optimizer (like AdamW) to adjust the model's weights to make it better.
+6.  **Inference (Summarization):** We will write a final function that takes a new article, runs it through our fine-tuned model to get a probability score for each sentence, and returns the top-scoring sentences as the summary.
+
 
 ## CONCLUSION FOR THE BENCHMARK
 
@@ -2622,7 +2740,7 @@ To understand *why* BERTSum is the winner, we must analyze the story told by eac
 | `Advanced_Extractive` | 0.2899  | **Disappointing.** The unsupervised semantic heuristics don't align well with the lexical reference. |
 | `Hybrid` & `LLM_Only` | < 0.1800  | **Failure (Expected).** These models are punished for paraphrasing and rewriting.                     |
 
-**Insight:** If your only goal is to maximize lexical overlap with an extractive-style reference, a supervised model trained for that specific task (BERTSum) is the undeniable king.
+**Insight:** If the only goal is to maximize lexical overlap with an extractive-style reference, a supervised model trained for that specific task (BERTSum) is the undeniable king.
 
 #### **Benchmark 2: The BERTScore Report (Semantic Similarity)**
 

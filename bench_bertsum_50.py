@@ -18,7 +18,7 @@ from rouge_score import rouge_scorer
 from bert_score import score as bert_scorer
 from tqdm import tqdm
 
-API_KEY = "sk-8Xke8AMuiLgpcqxMPtisfg" 
+API_KEY = "" 
 BASE_URL = "https://mkp-api.fptcloud.com"
 MODEL_NAME = "gpt-oss-120b"
 

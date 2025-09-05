@@ -28,7 +28,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # --- Cloud LLM Configuration ---
 # !! IMPORTANT !!: Use your actual key and model details.
 
-CLOUD_API_KEY = "sk-8Xke8AMuiLgpcqxMPtisfg" # Your key here
+CLOUD_API_KEY = "" # Your key here
 CLOUD_MODEL_NAME = "gpt-oss-120b"
 ## MODIFIED ## - Define the BASE URL separately and correctly.
 CLOUD_BASE_URL = "https://mkp-api.fptcloud.com/v1" 

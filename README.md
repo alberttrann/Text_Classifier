@@ -47,6 +47,39 @@ A critical aspect of a fair quantitative benchmark is ensuring that all models a
 
 Therefore, for all quantitative benchmarks (ROUGE and BERTScore), we enforce a **dynamic length control** policy. For each article in the test set, we first determine the number of sentences in its human-written reference summary. All models being evaluated on that article are then tasked with generating a summary of that **exact same length**. This ensures that we are purely measuring the quality of each model's content selection, not its ability to adhere to an arbitrary compression ratio.
 
+And in the qualitative, LLM-as-a-judge benchmark, this is we implement fair-length control: 
+
+**1. For the Advanced Models (`Advanced_Extractive`, `Hybrid`, `LLM_Only`):**
+
+*   **The Policy:** These models are all called in **`"Balanced"` mode**.
+    ```python
+    "Advanced_Extractive_Balanced": {"type": "advanced_extractive", "detail": "Balanced"},
+    "Hybrid_Balanced": {"type": "hybrid", "detail": "Balanced"},
+    "LLM_Only_Balanced": {"type": "llm_only", "detail": "Balanced"},
+    ```
+*   **How it Enforces Fair Length:**
+    *   For the `Advanced_Extractive` and `Hybrid` models, the `"Balanced"` setting maps to `base_sents_per_cluster = 2`. This means the models are instructed to select approximately **2 sentences from each major topic cluster** found by HDBSCAN. The final length is therefore determined by the *topical complexity* of the article, not a fixed ratio. An article with 2 topics will get a ~4 sentence summary; an article with 3 topics will get a ~6 sentence summary. This is a very fair, content-aware length control.
+    *   For the `LLM_Only` model, the `"Balanced"` setting maps to the prompt instruction `"The summary should be a well-rounded paragraph of 3-4 sentences."`. This directly instructs the model to aim for a specific, reasonable length.
+*   **Why this is Fair:** This policy ensures that all our sophisticated models are given the same high-level instruction: "produce a balanced, reasonably detailed summary." They are then judged on how well they achieve this goal using their different internal mechanisms.
+
+**2. For the Baseline Models (`TextRank_Baseline`, `Original_Paper_Method`):**
+
+These models do not have a "detail level." They are controlled by a number of sentences or a compression ratio.
+
+*   **The Policy:** To ensure they are comparable to the "Balanced" advanced models, they are configured to produce summaries of a fixed, reasonable length.
+    *   **TextRank:** `generated_summary = textrank_baseline(row.article, num_sentences=4)`
+    *   **Original Paper:** `generated_summary = model_1_summarize(row.article, title, compression_ratio=0.3)`
+*   **How it Enforces Fair Length:**
+    *   We have hardcoded `TextRank` to produce a 4-sentence summary, which is a very standard length for a "balanced" summary of a news article.
+    *   We have set the `Original_Paper_Method`'s compression ratio to `0.3`, which will also typically produce a summary of around 3-5 sentences for the articles in this dataset.
+*   **Why this is Fair:** This policy ensures that the baseline models are trying to solve the same problem as the advanced models—producing a medium-length summary. We are not unfairly comparing a 2-sentence TextRank summary to a 6-sentence Hybrid summary.
+
+In essence, the script's policy is:
+
+> **"All models will be benchmarked on their ability to produce a 'Balanced,' medium-length summary. For the advanced models, 'Balanced' is defined by their internal topic-coverage logic. For the baseline models, 'Balanced' is defined by a fixed output of approximately 4 sentences or a 30% compression ratio, which serves as a reasonable proxy."**
+
+This is a very strong and fair approach for a reference-free evaluation. It prevents length from becoming a major confounding variable and allows the LLM Judge to focus on the more important qualitative aspects: **Relevance, Faithfulness, and Coherence.** While not perfectly identical in length, the summaries are all in the same "ballpark," which is sufficient for a robust qualitative comparison.
+
 ### **4. Baselines and Reference Methods**
 
 Our project builds upon and compares against established methods in the field.
@@ -60,7 +93,9 @@ While initial models rely on unsupervised heuristics, the state-of-the-art in ex
 *   **Rationale:** A supervised approach allows the model to learn the complex, nuanced patterns that determine a sentence's importance directly from data, rather than relying on hand-crafted rules. By creating "oracle" labels based on which sentences from the source article best reconstruct the human-written summary, we can fine-tune a powerful pre-trained model like BERT to act as a highly accurate sentence classifier.
 *   **Reference:** Our implementation is conceptually based on the methods pioneered by the BERTSum model, as detailed in the official repository: [nlpyang/BertSum](https://github.com/nlpyang/BertSum). This approach is chosen for its proven ability to achieve state-of-the-art results on both lexical (ROUGE) and semantic evaluation metrics.
 
-## Phase 1: The Semantic Leap (`semantic_extractive1.py`)
+## A brief description of experiment phases
+
+### Phase 1: The Semantic Leap (`semantic_extractive1.py`)
 
 This version represented the first major architectural shift, moving from a purely lexical model to a semantic one to address the critical coverage failures.
 
@@ -73,7 +108,7 @@ This version represented the first major architectural shift, moving from a pure
     *   **Solved:** The "Thematic Silo" and "Lead Bias" problems. Summaries became far more representative of the entire document.
     *   **New Problem:** While coverage improved, the summaries often felt disjointed or incoherent, like a "list of facts," because sentences were being pulled from disparate parts of the text.
 
-## Phase 2: The Coherence and Relevance Push (`semantic_extractive2.py`)
+### Phase 2: The Coherence and Relevance Push (`semantic_extractive2.py`)
 
 This phase focused on refining the output of the new semantic model to improve readability and the quality of sentence selection.
 
@@ -84,7 +119,7 @@ This phase focused on refining the output of the new semantic model to improve r
     *   **Solved:** The "irrelevant sentence" problem (e.g., the "sense of smell" sentence was no longer selected). The coherence bonus also began to smooth out the most jarring topic jumps.
     *   **New Problem:** The summaries, while better, still lacked a clear narrative frame (introduction/conclusion) and the allocation of sentences to topics was still too simplistic, sometimes missing key concepts.
 
-## Phase 3-4: The Advanced Extractive Model (`semantic_extractive3.py`, `semantic_extractive4.py`)
+### Phase 3-4: The Advanced Extractive Model (`semantic_extractive3.py`, `semantic_extractive4.py`)
 
 These phases focused on adding a new layer of intelligence to the scoring and allocation logic, pushing the extractive model to its limits.
 
@@ -96,7 +131,7 @@ These phases focused on adding a new layer of intelligence to the scoring and al
     *   **Solved:** The model began selecting more fact-filled, important sentences and had a better chance of producing well-framed summaries.
     *   **New Problem:** We hit the "Extractive Wall." The model was producing excellent lists of key facts but was fundamentally unable to synthesize information or create true narrative flow. The inherent "jumpiness" of extraction remained.
 
-## Phase 5: The Re-ranking Paradigm (`semantic_extractive5.py`)
+### Phase 5: The Re-ranking Paradigm (`semantic_extractive5.py`)
 
 This phase introduced a paradigm shift to solve the limitations of single-pass selection. The model was re-architected into a two-stage **Generate-and-Re-rank** system.
 
@@ -111,7 +146,7 @@ This phase introduced a paradigm shift to solve the limitations of single-pass s
     *   **Solved:** This dramatically improved the quality and reliability of the output. The system could now explicitly optimize for a well-structured and balanced summary, often producing near-perfect extractive results.
     *   **New Problem:** The quality of the final summary was now entirely dependent on the quality and diversity of the initial candidate pool.
 
-## Phase 6-8: The Final Extractive System (`semantic_extractive6.py` to `semantic_extractive8.py`)
+### Phase 6-8: The Final Extractive System (`semantic_extractive6.py` to `semantic_extractive8.py`)
 
 This series of refinements focused on perfecting the Generate-and-Re-rank architecture.
 
@@ -122,9 +157,9 @@ This series of refinements focused on perfecting the Generate-and-Re-rank archit
 *   **Impact:**
     *   **Solved:** The system became highly responsive and adaptable, producing consistently high-quality, well-balanced, and structurally sound extractive summaries at various levels of detail. This represents the peak of the extractive model's capabilities.
 
-## Phase 9-10: The Hybrid Solution (`semantic_extractive9.py`, `semantic_abstractive.py`)
+### Phase 9-10: The Hybrid Solution (`semantic_extractive9.py`, `semantic_abstractive10.py`)
 
-This is the final and most powerful version of the system, addressing the inherent limitations of the extractive paradigm.
+This is the version addressing the inherent limitations of the extractive paradigm.
 
 *   **Key Change:**
     1.  **Abstractive Polishing (Hybridization):** The entire state-of-the-art extractive pipeline is used as a powerful "content selection" engine. Its final output (the best "fact sheet") is then fed to a **Large Language Model (LLM)** via LM Studio.
@@ -133,6 +168,10 @@ This is the final and most powerful version of the system, addressing the inhere
 *   **Impact:**
     *   **Solved:** This solves the final problems of **coherence, synthesis, and fluency**. The hybrid model combines the factual grounding and reliability of our extractive system with the superior linguistic capabilities of a generative model.
     *   **Final State:** The system now produces summaries that are not only factually accurate, representative, and well-structured, but also read as if they were written by a skilled human.
+
+### Phase 11: The Supervised Algorithm 
+
+We move from 
 
 These are the 2 IELTS paragraphs to be tested throughout the experiment 
 

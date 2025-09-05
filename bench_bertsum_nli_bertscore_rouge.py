@@ -17,7 +17,6 @@ from rouge_score import rouge_scorer
 from bert_score import score as bert_scorer
 from tqdm import tqdm
 
-# --- Global Configuration ---
 warnings.filterwarnings("ignore", category=UserWarning)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -160,7 +160,7 @@ def _select_sentences_for_candidate(sentences_data, num_clusters, allocation_con
         
         for _ in range(num_to_pick):
             if not candidate_sentences: break
-            # ... (MMR loop is the same as the bug-fixed version) ...
+            # ... (MMR loop is the same) ...
             mmr_candidate_scores = []
             summary_embeddings = np.array([sentence_lookup[s_id]['embedding'] for s_id in final_summary_indices]) if final_summary_indices else np.array([])
             last_selected_embedding = sentence_lookup[final_summary_indices[-1]]['embedding'] if final_summary_indices else None

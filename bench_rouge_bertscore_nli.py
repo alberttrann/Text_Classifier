@@ -35,7 +35,6 @@ print(f"Using device: {DEVICE}")
 # --- MODEL DEFINITIONS ---
 # ==============================================================================
 
-# --- Global Models (loaded once) ---
 print("Loading global models (SBERT, spaCy, NLI)... This may take a moment.")
 SBERT_MODEL = SentenceTransformer('intfloat/multilingual-e5-large-instruct', device=DEVICE)
 SPACY_NLP = spacy.load("en_core_web_sm")
@@ -85,7 +84,7 @@ def model_1_summarize(text, title, num_sentences, sim_threshold=0.3):
                        np.sum(sim_matrix[i, :]))
         if is_fallback: scores[i] = feature_sum
         else: scores[i] = bitvector[i] * feature_sum
-    ## MODIFIED ## - Use the explicitly passed num_sentences
+    ## Use the explicitly passed num_sentences
     num_sentences_to_select = min(n, max(1, num_sentences))
     if is_fallback:
         candidate_indices = np.argsort(scores)[::-1][:num_sentences_to_select]
@@ -103,7 +102,6 @@ def model_1_summarize(text, title, num_sentences, sim_threshold=0.3):
 
 # --- Advanced Models Helper Functions ---
 def _preprocess(text):
-    # ... (This function is correct and unchanged)
     stop_words = set(stopwords.words('english'))
     stemmer = PorterStemmer()
     try: original_sentences = sent_tokenize(text)
@@ -119,14 +117,12 @@ def _preprocess(text):
             idx += 1
     return processed_data, unfiltered_map
 def _embed(sentences_data, sbert_model):
-    # ... (This function is correct and unchanged)
     original_sentences = [s['original'] for s in sentences_data]
     embeddings = sbert_model.encode(original_sentences, show_progress_bar=False)
     for i, s_data in enumerate(sentences_data):
         s_data['embedding'] = embeddings[i]
     return sentences_data
 def _cluster(sentences_data, min_cluster_size=2):
-    # ... (This function is correct and unchanged)
     embeddings = np.array([s['embedding'] for s in sentences_data])
     clusterer = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, metric='euclidean', gen_min_span_tree=False, allow_single_cluster=True)
     clusterer.fit(embeddings)
@@ -135,7 +131,6 @@ def _cluster(sentences_data, min_cluster_size=2):
         s_data['cluster_id'] = clusterer.labels_[i]
     return sentences_data, num_clusters
 def _score(sentences_data, unfiltered_map):
-    # ... (This function is correct and unchanged)
     embeddings = np.array([s['embedding'] for s in sentences_data])
     n_orig = max(unfiltered_map.keys()) + 1 if unfiltered_map else len(sentences_data)
     graph = nx.from_numpy_array(cosine_similarity(embeddings))

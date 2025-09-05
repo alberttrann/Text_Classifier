@@ -207,7 +207,6 @@ if __name__ == "__main__":
     LAMBDA_RELEVANCE = 0.6  # Focus primarily on relevance
     LAMBDA_COHERENCE = 0.2  # Add a moderate bonus for good flow
     
-    # --- Input Text (The "Electroreception" example, which had coherence issues) ---
     TITLE = input("Enter the title for the text: ")
     print("Enter or paste the text to summarize. Press CTRL+Z and then Enter to finish.")
     TEXT = ""

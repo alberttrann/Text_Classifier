@@ -88,7 +88,6 @@ def summarize_with_bertsum(text, model, tokenizer, device, probability_threshold
     if sentence_scores.ndim == 0:
         sentence_scores = np.array([sentence_scores])
 
-    ## NEW LOGIC ##
     # Select all sentences whose predicted probability is above the threshold.
     selected_indices = np.where(sentence_scores > probability_threshold)[0]
     
@@ -96,8 +95,6 @@ def summarize_with_bertsum(text, model, tokenizer, device, probability_threshold
     if len(selected_indices) == 0:
         selected_indices = [np.argmax(sentence_scores)]
     
-    # We no longer need to sort by argsort, but we do need to sort the final indices
-    # to maintain original order.
     final_indices = sorted(list(selected_indices))
     
     summary = " ".join([article_sentences[i] for i in final_indices if i < len(article_sentences)])
@@ -171,9 +168,6 @@ def llm_as_judge(original_article, candidate_summary):
             model=MODEL_NAME, 
             messages=[{"role": "user", "content": prompt}], 
             temperature=0.1,
-            # Note: response_format is specific to OpenAI's newer models.
-            # If your FPT endpoint doesn't support it, you may need to remove this line.
-            # It's a hint to the model, but not always required for it to produce JSON.
             # response_format={"type": "json_object"} 
         )
         json_response_text = response.choices[0].message.content
@@ -244,7 +238,7 @@ def run_bertsum_evaluation():
         
         # Generate summary with dynamic length to match reference for fairness
         num_sents = len(sent_tokenize(reference))
-        ## MODIFIED ## - Call the new, threshold-based summarizer
+        ## Call the new, threshold-based summarizer
         candidate = summarize_with_bertsum(article, model, tokenizer, DEVICE, probability_threshold=0.5)
         
         if not candidate: continue
@@ -273,7 +267,7 @@ def run_bertsum_evaluation():
             'judge_coherence': judge_scores['coherence_score'],
             'judge_conciseness': judge_scores['conciseness_score'],
         })
-        time.sleep(1) # Small delay for API calls
+        time.sleep(1) 
 
     # --- 4. Print Final Report Card ---
     results_df = pd.DataFrame(results)

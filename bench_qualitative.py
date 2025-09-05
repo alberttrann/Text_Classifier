@@ -21,32 +21,26 @@ from nltk.stem import PorterStemmer
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-# --- Global Configuration ---
 warnings.filterwarnings("ignore", category=UserWarning)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# --- Cloud LLM Configuration ---
-# !! IMPORTANT !!: Use your actual key and model details.
 
 CLOUD_API_KEY = "" # Your key here
 CLOUD_MODEL_NAME = "gpt-oss-120b"
-## MODIFIED ## - Define the BASE URL separately and correctly.
 CLOUD_BASE_URL = "https://mkp-api.fptcloud.com/v1" 
-CLOUD_API_URL = f"{CLOUD_BASE_URL}/chat/completions" # Keep the full URL for requests
+CLOUD_API_URL = f"{CLOUD_BASE_URL}/chat/completions" 
 
-# 2. Local LLM (for Summarization) via LM Studio
 LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
 
 # Create the OpenAI client ONLY for the cloud model
 try:
-    ## MODIFIED ## - Pass the base URL directly as a string.
+    ## Pass the base URL directly as a string.
     import openai
     cloud_client = openai.OpenAI(api_key=CLOUD_API_KEY, base_url=CLOUD_BASE_URL)
     print("Cloud LLM client for judging configured successfully.")
 except Exception as e:
     print(f"Failed to configure OpenAI client for judging: {e}")
     cloud_client = None
-# --- Global Models ---
 print("Loading global models (SBERT, spaCy)... This may take a moment.")
 SBERT_MODEL = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
 SPACY_NLP = spacy.load("en_core_web_sm")
@@ -290,7 +284,7 @@ def llm_as_judge(original_article, candidate_summary):
             
             final_user_prompt = user_prompt_template.format(preamble=preamble)
 
-            ## MODIFIED ## - Using the robust 'requests' library for the cloud call
+            ## Using the robust 'requests' library for the cloud call
             headers = {"Authorization": f"Bearer {CLOUD_API_KEY}", "Content-Type": "application/json"}
             payload = {
                 "model": CLOUD_MODEL_NAME, 

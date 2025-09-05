@@ -14,7 +14,7 @@ import math
 # PHASES 1 & 2: PRE-PROCESSING, EMBEDDING, CLUSTERING (MODIFIED)
 # ==============================================================================
 def preprocess(text):
-    # ... (No changes from the bug-fixed version)
+    # ... (No changes)
     stop_words = set(stopwords.words('english'))
     stemmer = PorterStemmer()
     original_sentences = sent_tokenize(text)
@@ -167,7 +167,7 @@ def generate_candidate_summaries(sentences_data, num_clusters, n_original):
 def generate_summary_with_mmr(sentences_data, num_clusters, 
                               lambda_relevance, lambda_coherence,
                               dynamic_compression_std_dev):
-    # ... (The exact same bug-fixed logic as before) ...
+    # ... (The exact same logic as before) ...
     sentence_lookup = {s['id']: s for s in sentences_data}
     all_scores = [s['relevance_score'] for s in sentences_data]
     if not all_scores: return []

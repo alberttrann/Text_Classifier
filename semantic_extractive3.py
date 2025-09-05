@@ -228,7 +228,6 @@ if __name__ == "__main__":
     LAMBDA_COHERENCE = 0.3
     DYNAMIC_COMPRESSION_STD_DEV = 0.7 # Lower value = more sentences, Higher value = more selective
     
-    # --- Input Text (The "Time Travel" example, which had unbalanced topics) ---
     TITLE = input("Enter the title for the text: ")
     print("Enter or paste the text to summarize. Press CTRL+Z and then Enter to finish.")
     TEXT = ""

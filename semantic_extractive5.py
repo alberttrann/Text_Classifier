@@ -91,7 +91,6 @@ def score_sentences(sentences_data, unfiltered_map, similarity_threshold=0.3):
 def generate_summary_with_mmr(sentences_data, num_clusters, 
                               lambda_relevance, lambda_coherence,
                               dynamic_compression_std_dev):
-    # ... (The exact same logic as the bug-fixed version, but with a new return) ...
     sentence_lookup = {s['id']: s for s in sentences_data}
     all_scores = [s['relevance_score'] for s in sentences_data]
     if not all_scores: return [], 0, 0

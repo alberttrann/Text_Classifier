@@ -43,7 +43,6 @@ def summarize_with_llm_only(text, title, detail_level_str):
         "Now, provide the polished, single-paragraph summary:"
     ).format(title=title, detail_instruction=detail_instruction, text=text)
     
-    # 3. Call the LM Studio API (same logic as before)
     url = "http://localhost:1234/v1/chat/completions"
     headers = {"Content-Type": "application/json"}
     payload = {
@@ -52,7 +51,7 @@ def summarize_with_llm_only(text, title, detail_level_str):
             {"role": "system", "content": "You are an expert summarization assistant."},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.3, # Low temperature for factual tasks
+        "temperature": 0.3, 
     }
     
     try:
@@ -63,7 +62,6 @@ def summarize_with_llm_only(text, title, detail_level_str):
         return polished_summary.strip()
         
     except requests.exceptions.RequestException as e:
-        # Error handling remains the same
         error_message = (
             "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
             "!!! ERROR: Could not connect to LM Studio server.      !!!\n"
@@ -91,7 +89,6 @@ if __name__ == "__main__":
     print("Enter or paste the text to summarize. Press CTRL+Z and then Enter (Windows) or CTRL+D (Linux/macOS) to finish.")
     TEXT = sys.stdin.read()
     
-    # --- Execute the simple, LLM-only pipeline ---
     final_summary = summarize_with_llm_only(TEXT, TITLE, DETAIL_LEVEL)
     
     # --- Display Results ---

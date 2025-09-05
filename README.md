@@ -38,7 +38,7 @@ We utilize both reference-based and reference-free metrics to provide a complete
     *   **BERTScore:** This metric moves beyond lexical overlap to measure semantic similarity. It uses contextual embeddings from BERT to compare the meaning of the generated summary to the reference. A high BERTScore F1 indicates that the model has successfully captured the core meaning of the human-written summary, even if it uses different words (e.g., synonyms or paraphrasing).
 
 *   **Reference-Free Metrics (Comparing to the Source Article):**
-    *   **NLI (Natural Language Inference):** This metric acts as an objective "fact-checker." For each sentence in a generated summary, an NLI model determines if it is logically supported by ("entailed by") the source article. A high **Entailment** score and a low **Contradiction** score are definitive indicators of a model's factual consistency and its resistance to "hallucinating" information.
+    *   **NLI (Natural Language Inference):** We will use a high-performance, pre-trained NLI model. A great choice is a **DeBERTa-v3 model fine-tuned on the MNLI (Multi-Genre Natural Language Inference) dataset**. This model is specifically designed to determine if a "hypothesis" (a summary sentence) is supported by a "premise" (an article sentence). The Process (for each summary) is that the script will first generate a summary using one of our models, it will then iterate through each sentence in the generated summary (these are our "hypotheses"). For each hypothesis, it will perform a **semantic search** over the original article's sentences to find the single most relevant sentence to act as the "premise." This ensures we are checking the fact against the right part of the source text. It will feed this `(premise, hypothesis)` pair into the NLI model. The NLI model will output probabilities for three labels: `CONTRADICTION`, `NEUTRAL`, and `ENTAILMENT`. A high **Entailment** score and a low **Contradiction** score are definitive indicators of a model's factual consistency and its resistance to "hallucinating" information.
     *   **LLM-as-a-Judge:** For a final, holistic assessment, we use a powerful, unbiased Large Language Model as a qualitative evaluator. The LLM scores each summary from 1 to 5 on four key criteria—**Relevance, Faithfulness, Coherence, and Conciseness**—based solely on the original article. This provides a human-like assessment of the summary's overall quality and readability.
 
 ### **3. Fair Length Control for Unbiased Comparison**
@@ -171,7 +171,9 @@ This is the version addressing the inherent limitations of the extractive paradi
 
 ### Phase 11: The Supervised Algorithm 
 
-We move from 
+We move from unsupervised, heuristic-based approaches to a supervised, extractive finetuning approach to aim for a high-ROUGE, high-BERTScore system
+
+---
 
 These are the 2 IELTS paragraphs to be tested throughout the experiment 
 

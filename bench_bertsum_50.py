@@ -40,7 +40,7 @@ print(f"Using device: {DEVICE}")
 # --- BERTSum Model Definition and Inference Logic ---
 # ==============================================================================
 
-PRE_TRAINED_MODEL_NAME = 'bert-base-uncased'
+PRE_TRAINED_MODEL_NAME = 'MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli'
 MAX_LEN = 512
 
 class BERTSummarizer(torch.nn.Module):

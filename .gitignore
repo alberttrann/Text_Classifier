@@ -3,3 +3,5 @@ Lec3.md
 .venv/
 BBC News Summary/
 bertsum_best_model.bin
+svo_bertsum_best_model.bin
+svo_xgb_summarizer.json

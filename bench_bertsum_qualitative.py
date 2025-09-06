@@ -298,5 +298,4 @@ def run_bertsum_evaluation():
 
 if __name__ == "__main__":
     # Ensure your fine-tuned model 'bertsum_best_model.bin' is in the same directory.
-    # Ensure your LM Studio server is running for the LLM-as-a-Judge evaluation.
     run_bertsum_evaluation()

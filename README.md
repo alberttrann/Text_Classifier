@@ -3700,21 +3700,30 @@ This table presents the complete evaluation results for all developed models acr
 
 This table provides the definitive story of our entire research journey.
 
-**1. The Quantitative Champion: `BERTSum`**
+**1. The top performers at each metric**
+* Below is each metric with its top performer
+    * ROUGE-1, ROUGE-2, ROUGE-L, BERTScore-F1: `BERTSum(Fine-tuned)`. The close runner-up is `SVO-BERTSum(Fine-tuned)`. These 2 models top this metric and leave a far distance with the remaining models
+    * NLI-Entailment: `SVO-XGBoost(Supervised)`. Close runner-up is `TextRank_Baseline`.Tied for third places are `BERTSum` and `SVO-BERTSum`
+    * NLI-Contradiction: `Hybrid (Faithfulness-Guaranteed)`, at absolute 0.0000. Close runner-ups is `SVO-XGBoost`, tied for third places are `TextRank_Baseline`, `Advanced_Extractive(Balanced)`, `Original_Paper_Method`
+    * Judge Relevance, Judge Coherence, Judge Conciseness, Judge Overall Avg: `Hybrid(Original)`
+    * Judge Faithfulness: `Advanced_Extractive(Balanced)`. Close runner-ups are `SVO-BERTSum(Fine-tuned)`, `Original_Paper_Method`, `Hybrid(Original)`. At third places are `BERTSum` & `TextRank_Baseline`
+
+**2. The Quantitative Champion: `BERTSum`**
 *   The **supervised `BERTSum` model is the undeniable winner on all quantitative, reference-based metrics (ROUGE and BERTScore)**. Its performance significantly outstrips all other models. This proves that for tasks requiring maximum lexical and semantic alignment with a known reference style, a fine-tuned, deep learning approach is the state-of-the-art.
 
-**2. The Unsupervised Story: Semantics vs. Lexical**
+**3. The Unsupervised Story: Semantics vs. Lexical**
 *   Among the unsupervised models, **`TextRank` wins on ROUGE-L**, proving its strength at finding lexically central sentences. However, our **`Advanced_Extractive` model has a respectable BERTScore**, showing its semantic clustering is effective, even if it doesn't align perfectly with the dataset's extractive reference style. The **`SVO-XGBoost` model serves as a powerful bridge**, performing well on all metrics and proving that structured semantic features are highly effective.
 
-**3. The Qualitative Champion: The `Hybrid (Original)` Model**
+**4. The Qualitative Champion: The `Hybrid (Original)` Model**
 *   The **original `Hybrid` model achieved the highest scores from the LLM-as-a-Judge**, particularly on **Relevance, Coherence, and Conciseness**. This confirms that for creating a summary that is *perceived* as the highest quality by a human-like evaluator, the LLM polishing stage is transformative.
 
-**4. The Critical Role of Faithfulness: The NLI Verdict**
+**5. The Critical Role of Faithfulness: The NLI Verdict**
 *   This is the most important story. The NLI metrics act as the "truth detector."
     *   **All extractive models (including BERTSum and SVO-XGBoost) are nearly perfectly faithful**, with Entailment scores > 0.97 and Contradiction scores near zero. They are trustworthy.
     *   The **`LLM_Only` model is a catastrophic failure**, with an Entailment score of just 0.1393. It is dangerously unreliable.
     *   The **`Hybrid (Original)` model, despite its high qualitative scores, is also fundamentally untrustworthy**, with a very low Entailment score of 0.4410.
     *   The **`Hybrid (Faithfulness-Guaranteed)` model successfully solves this problem**, achieving a near-perfect Entailment score of **0.9833** and a perfect Contradiction score of **0.0000**.
+
 
 ### **The Ultimate Recommendation**
 

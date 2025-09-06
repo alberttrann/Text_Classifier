@@ -3206,6 +3206,8 @@ The qualitative table tells a different but equally important story. The **`Hybr
 
 ## PHASE 14 - `bench_verified_hybrid14.py`, `bench_verified_hybrid_qualitative14.py`
 
+*The model to be used in this phase is `qwen3-4b-instruct-2507`, replacing `phi-4-mini-instruct` because for some reasons, the `phi-4` model messes up when being told to re-corrent itself multiple times*
+
 We will implement **both** of the suggested improvements:
 1.  **Better Prompt Engineering:** We will craft a new, "high-constraint" prompt that aggressively instructs the LLM to prioritize faithfulness.
 2.  **Fact-Checking Loop:** We will build a verification loop. After the LLM generates a polished summary, our NLI model will act as an automated "fact-checker." If any sentence fails the check, we will ask the LLM to rewrite it until it passes.

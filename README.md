@@ -3727,3 +3727,11 @@ The data allows for a clear, nuanced, and powerful final recommendation.
     *   **The High-Risk, High-Reward Option:** The **`Hybrid (Original)` model** produces the most human-like summaries but should be used with extreme caution in any fact-sensitive domain, as it is prone to factual drift.
 
 This comprehensive evaluation provides a complete picture of the summarization landscape, demonstrating the strengths and critical weaknesses of each major AI paradigm and culminating in a hybrid solution that is both powerful and verifiably safe.
+
+![alt text](visualizations/judge_scores_comparison.png)
+
+![alt text](visualizations/overall_judge_ranking.png)
+
+![alt text](visualizations/rouge_scores_comparison.png)
+
+![alt text](visualizations/semantic_scores_comparison.png)

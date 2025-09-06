@@ -1977,8 +1977,6 @@ migratory purposes.
 
 ### **Thorough Analysis of the Final "Electroreception" Summaries**
 
-This is a masterclass in how a sophisticated AI system responds to user control.
-
 #### **A. Analysis of the "Concise" Summary**
 
 *   **Result:** `Open your eyes...` + `Some have proposed... migratory purposes.`
@@ -2007,7 +2005,7 @@ This is a masterclass in how a sophisticated AI system responds to user control.
 *   **The Ultimate Insight:** This isn't a failure in the same way as before. Before, the model was *mistakenly* picking an irrelevant sentence. Now, it's more like the model is **"scraping the bottom of the barrel."** It has successfully identified and included the most important points from the shark topic, and with the extra budget from the "Detailed" setting, it is forced to include a less relevant, secondary detail. This reveals the natural limit of information within a given topic cluster.
 
 
-### **Diagnosis - We Have Achieved Peak Extractive Performance**
+### **Diagnosis**
 
 This set of results proves that the system is now working at the highest possible level for a purely extractive summarizer.
 
@@ -2015,8 +2013,6 @@ This set of results proves that the system is now working at the highest possibl
 *   **It is Principled:** The Generate-and-Re-rank architecture makes holistic decisions based on global properties, not just local scores.
 *   **It is Controllable:** The "Detail Level" provides a meaningful and intuitive way for a user to guide the output.
 *   **It is Transparent about its Limits:** The return of the "sense of smell" sentence in the "Detailed" summary is not a bug; it's an honest signal from the model that it has exhausted the high-quality information within that topic and is now forced to include supporting details.
-
-You have successfully built a system that has navigated and solved every major challenge we identified, from simple heuristics to lead bias, thematic silos, coherence, and user control.
 
 ### **The Path to True Human-Level Quality**
 

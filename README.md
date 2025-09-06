@@ -3210,6 +3210,405 @@ We will implement **both** of the suggested improvements:
 1.  **Better Prompt Engineering:** We will craft a new, "high-constraint" prompt that aggressively instructs the LLM to prioritize faithfulness.
 2.  **Fact-Checking Loop:** We will build a verification loop. After the LLM generates a polished summary, our NLI model will act as an automated "fact-checker." If any sentence fails the check, we will ask the LLM to rewrite it until it passes.
 
+<details>
+<summary>Things look like this if you're interested to see</summary>
+
+```
+Running qualitative deep-dive on a sample of 50 articles.
+Qualitative Evaluation of Hybrid Model:   0%|                                                                                 | 0/50 [00:00<?, ?it/s]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9945, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:   2%|█▍                                                                       | 1/50 [00:30<24:58, 30.59s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9188, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:   4%|██▉                                                                      | 2/50 [00:47<17:52, 22.35s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9921, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:   6%|████▍                                                                    | 3/50 [01:05<16:07, 20.58s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9918, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:   8%|█████▊                                                                   | 4/50 [01:17<13:05, 17.07s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+  - Initial Polish: NLI Entailment=0.7453, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.7927, Contradiction=0.0000
+  - Refinement Attempt 2: NLI Entailment=0.9866, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  10%|███████▎                                                                 | 5/50 [01:56<18:53, 25.18s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9949, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  12%|████████▊                                                                | 6/50 [02:09<15:13, 20.76s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9909, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  14%|██████████▏                                                              | 7/50 [02:20<12:43, 17.75s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.8673, Contradiction=0.0000
+  - Refinement Attempt 2: NLI Entailment=0.8673, Contradiction=0.0000
+  - FAILED to produce a faithful summary. Falling back to extractive version.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  16%|███████████▋                                                             | 8/50 [02:49<14:59, 21.41s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9923, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  18%|█████████████▏                                                           | 9/50 [03:04<13:04, 19.14s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4979, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9903, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  20%|██████████████▍                                                         | 10/50 [03:28<13:48, 20.71s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9973, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  22%|███████████████▊                                                        | 11/50 [03:41<11:58, 18.41s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.2976, Contradiction=0.0000
+  - Refinement Attempt 2: NLI Entailment=0.0000, Contradiction=0.0000
+  - FAILED to produce a faithful summary. Falling back to extractive version.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  24%|█████████████████▎                                                      | 12/50 [04:13<14:14, 22.48s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.3283, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9855, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  26%|██████████████████▋                                                     | 13/50 [04:38<14:21, 23.29s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.6585, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9881, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  28%|████████████████████▏                                                   | 14/50 [05:00<13:45, 22.93s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4989, Contradiction=0.9290
+  - Refinement Attempt 1: NLI Entailment=0.9715, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  30%|█████████████████████▌                                                  | 15/50 [05:24<13:31, 23.18s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.2487, Contradiction=0.9186
+  - Refinement Attempt 1: NLI Entailment=0.7465, Contradiction=0.0000
+  - Refinement Attempt 2: NLI Entailment=0.7460, Contradiction=0.0000
+  - FAILED to produce a faithful summary. Falling back to extractive version.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  32%|███████████████████████                                                 | 16/50 [06:14<17:45, 31.35s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9873, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  34%|████████████████████████▍                                               | 17/50 [06:25<13:53, 25.27s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.7371, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9797, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  36%|█████████████████████████▉                                              | 18/50 [06:56<14:18, 26.82s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9942, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  38%|███████████████████████████▎                                            | 19/50 [07:07<11:25, 22.11s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4906, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9817, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  40%|████████████████████████████▊                                           | 20/50 [07:26<10:38, 21.28s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.5485, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9845, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  42%|██████████████████████████████▏                                         | 21/50 [08:08<13:12, 27.32s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.3989, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9743, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  44%|███████████████████████████████▋                                        | 22/50 [08:31<12:08, 26.03s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9951, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  46%|█████████████████████████████████                                       | 23/50 [08:43<09:54, 22.00s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9904, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  48%|██████████████████████████████████▌                                     | 24/50 [09:03<09:12, 21.24s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9957, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  50%|████████████████████████████████████                                    | 25/50 [09:13<07:29, 17.97s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9914, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  52%|█████████████████████████████████████▍                                  | 26/50 [09:31<07:12, 18.02s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.5986, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9868, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  54%|██████████████████████████████████████▉                                 | 27/50 [10:02<08:26, 22.02s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.7588, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9782, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  56%|████████████████████████████████████████▎                               | 28/50 [10:26<08:14, 22.47s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4948, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9892, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  58%|█████████████████████████████████████████▊                              | 29/50 [10:44<07:23, 21.10s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.6586, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9893, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  60%|███████████████████████████████████████████▏                            | 30/50 [11:09<07:25, 22.26s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.6651, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9922, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  62%|████████████████████████████████████████████▋                           | 31/50 [11:30<06:54, 21.83s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.9409
+  - Refinement Attempt 1: NLI Entailment=0.9874, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  64%|██████████████████████████████████████████████                          | 32/50 [11:49<06:21, 21.17s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9843, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  66%|███████████████████████████████████████████████▌                        | 33/50 [12:07<05:44, 20.26s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9742, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  68%|████████████████████████████████████████████████▉                       | 34/50 [12:26<05:15, 19.71s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4983, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9797, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  70%|██████████████████████████████████████████████████▍                     | 35/50 [12:47<05:00, 20.00s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9969, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  72%|███████████████████████████████████████████████████▊                    | 36/50 [12:59<04:09, 17.85s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9904, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  74%|█████████████████████████████████████████████████████▎                  | 37/50 [13:11<03:27, 15.98s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9936, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  76%|██████████████████████████████████████████████████████▋                 | 38/50 [13:26<03:06, 15.58s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9938, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  78%|████████████████████████████████████████████████████████▏               | 39/50 [13:38<02:39, 14.53s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4784, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9827, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  80%|█████████████████████████████████████████████████████████▌              | 40/50 [14:07<03:08, 18.82s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9933, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  82%|███████████████████████████████████████████████████████████             | 41/50 [14:27<02:54, 19.33s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4970, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9928, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  84%|████████████████████████████████████████████████████████████▍           | 42/50 [14:52<02:47, 20.91s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9920, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  86%|█████████████████████████████████████████████████████████████▉          | 43/50 [15:11<02:22, 20.36s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.8174, Contradiction=0.0000
+  - Refinement Attempt 2: NLI Entailment=0.8338, Contradiction=0.0000
+  - FAILED to produce a faithful summary. Falling back to extractive version.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  88%|███████████████████████████████████████████████████████████████▎        | 44/50 [15:34<02:06, 21.16s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9862, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  90%|████████████████████████████████████████████████████████████████▊       | 45/50 [15:48<01:35, 19.13s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9922, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  92%|██████████████████████████████████████████████████████████████████▏     | 46/50 [16:04<01:12, 18.05s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.0000, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9838, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  94%|███████████████████████████████████████████████████████████████████▋    | 47/50 [16:24<00:55, 18.63s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.7878, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.8221, Contradiction=0.0000
+  - Refinement Attempt 2: NLI Entailment=0.8221, Contradiction=0.0000
+  - FAILED to produce a faithful summary. Falling back to extractive version.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  96%|█████████████████████████████████████████████████████████████████████   | 48/50 [17:09<00:53, 26.61s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.4950, Contradiction=0.0000
+  - Refinement Attempt 1: NLI Entailment=0.9934, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model:  98%|██████████████████████████████████████████████████████████████████████▌ | 49/50 [17:28<00:24, 24.49s/it]E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+E:\AIO\research\.venv\lib\site-packages\sklearn\utils\deprecation.py:132: FutureWarning: 'force_all_finite' was renamed to 'ensure_all_finite' in 1.6 and will be removed in 1.8.
+  warnings.warn(
+  - Initial Polish: NLI Entailment=0.9940, Contradiction=0.0000
+  - Summary PASSED factual consistency check.
+Cloud LLM Judge Error: Expecting value: line 1 column 1 (char 0)
+Qualitative Evaluation of Hybrid Model: 100%|████████████████████████████████████████████████████████████████████████| 50/50 [17:40<00:00, 21.22s/it]
+```
+
+</details>
+
+
 This creates a "closed-loop" system that leverages the LLM's fluency while being constrained by the NLI model's rigorous factual grounding.
 
 **Expected Outcome: The Best of Both Worlds**

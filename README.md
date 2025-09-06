@@ -3288,7 +3288,7 @@ This table presents the complete evaluation results for all developed models acr
 | `Original_Paper_Method`              | 0.3892  | 0.3102  | 0.3093  | 0.8806       | 0.9827             | **0.0053**                | 1.84                   | 4.92                      | 4.36                   | 4.72                     | 3.96                   |
 | **Abstractive & Hybrid Models**      |         |         |         |              |                    |                       |                        |                           |                        |                          |                        |
 | `Hybrid (Faithfulness-Guaranteed)`   | 0.3534  | 0.2567  | 0.2728  | 0.8793       | **0.9833**         | **0.0000**                | 2.26                   | 4.88                      | 4.60                   | 4.10                     | 3.96                   |
-| `Hybrid (Unsafe / Original)`         | 0.3172  | 0.1078  | 0.1785  | 0.8609       | 0.4410             | 0.0805                | **3.18**                   | 4.92                      | **4.90**                   | **4.90**                     | **4.48**                   |
+| `Hybrid (Original)`         | 0.3172  | 0.1078  | 0.1785  | 0.8609       | 0.4410             | 0.0805                | **3.18**                   | 4.92                      | **4.90**                   | **4.90**                     | **4.48**                   |
 | `LLM_Only (Unsafe)`                  | 0.3016  | 0.1027  | 0.1686  | 0.8610       | 0.1393             | 0.0703                | 1.00                   | 1.02                      | 2.76                   | 2.94                     | 1.93                   |
 
 *(Note: Higher is better for all metrics except NLI-Contradiction, where lower is better. Best score in each column is **bolded**.)*
@@ -3305,14 +3305,14 @@ This table provides the definitive story of our entire research journey.
 **2. The Unsupervised Story: Semantics vs. Lexical**
 *   Among the unsupervised models, **`TextRank` wins on ROUGE-L**, proving its strength at finding lexically central sentences. However, our **`Advanced_Extractive` model has a respectable BERTScore**, showing its semantic clustering is effective, even if it doesn't align perfectly with the dataset's extractive reference style. The **`SVO-XGBoost` model serves as a powerful bridge**, performing well on all metrics and proving that structured semantic features are highly effective.
 
-**3. The Qualitative Champion: The `Hybrid (Unsafe)` Model**
+**3. The Qualitative Champion: The `Hybrid (Original)` Model**
 *   The **original `Hybrid` model achieved the highest scores from the LLM-as-a-Judge**, particularly on **Relevance, Coherence, and Conciseness**. This confirms that for creating a summary that is *perceived* as the highest quality by a human-like evaluator, the LLM polishing stage is transformative.
 
 **4. The Critical Role of Faithfulness: The NLI Verdict**
 *   This is the most important story. The NLI metrics act as the "truth detector."
     *   **All extractive models (including BERTSum and SVO-XGBoost) are nearly perfectly faithful**, with Entailment scores > 0.97 and Contradiction scores near zero. They are trustworthy.
     *   The **`LLM_Only` model is a catastrophic failure**, with an Entailment score of just 0.1393. It is dangerously unreliable.
-    *   The **`Hybrid (Unsafe)` model, despite its high qualitative scores, is also fundamentally untrustworthy**, with a very low Entailment score of 0.4410.
+    *   The **`Hybrid (Original)` model, despite its high qualitative scores, is also fundamentally untrustworthy**, with a very low Entailment score of 0.4410.
     *   The **`Hybrid (Faithfulness-Guaranteed)` model successfully solves this problem**, achieving a near-perfect Entailment score of **0.9833** and a perfect Contradiction score of **0.0000**.
 
 ### **The Ultimate Recommendation**
@@ -3323,6 +3323,6 @@ The data allows for a clear, nuanced, and powerful final recommendation.
 
 *   **For Real-World Applications:** The choice is a trade-off between perceived quality and guaranteed safety.
     *   **The Best All-Rounder (The Recommended Choice):** The **`Hybrid (Faithfulness-Guaranteed)` model** represents the best overall system. While its ROUGE and BERTScore are lower due to paraphrasing, it is the only model that combines **high qualitative scores** (from the LLM judge) with **perfect, objectively verified factual consistency** (from the NLI benchmark). It is fluent, coherent, and trustworthy.
-    *   **The High-Risk, High-Reward Option:** The **`Hybrid (Unsafe)` model** produces the most human-like summaries but should be used with extreme caution in any fact-sensitive domain, as it is prone to factual drift.
+    *   **The High-Risk, High-Reward Option:** The **`Hybrid (Original)` model** produces the most human-like summaries but should be used with extreme caution in any fact-sensitive domain, as it is prone to factual drift.
 
 This comprehensive evaluation provides a complete picture of the summarization landscape, demonstrating the strengths and critical weaknesses of each major AI paradigm and culminating in a hybrid solution that is both powerful and verifiably safe.

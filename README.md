@@ -3740,3 +3740,38 @@ This comprehensive evaluation provides a complete picture of the summarization l
 ![alt text](visualizations/rouge_scores_comparison.png)
 
 ![alt text](visualizations/semantic_scores_comparison.png)
+
+## DEMO
+
+![alt text](visualizations/original_paper.png)
+
+![alt text](visualizations/textrank.png)
+
+![alt text](visualizations/svo_xgboost.png)
+
+![alt text](visualizations/bertsum.png)
+
+![alt text](visualizations/svobertsum.png)
+
+![alt text](visualizations/adv_extr1.png)
+
+![alt text](visualizations/adv_extr2.png)
+
+![alt text](visualizations/hybrid.png)
+
+![alt text](visualizations/llmonly.png)
+
+![alt text](visualizations/hybrid1.png)
+
+![alt text](visualizations/hybrid2.png)
+
+![alt text](visualizations/image.png)
+
+![alt text](visualizations/image1.png)
+
+![alt text](visualizations/image2.png)
+
+![alt text](visualizations/image3.png)
+
+![alt text](visualizations/image4.png)
+
